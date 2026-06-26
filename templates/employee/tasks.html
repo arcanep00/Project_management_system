@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks — ProjectMS{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">My Tasks</h4>
+    <p class="text-muted small mb-0">{{ tasks|length }} task{{ tasks|length|pluralize }} assigned to you</p>
+  </div>
+</div>
+
+<!-- Task Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 text-center py-3">
+      <div class="h4 fw-bold text-warning mb-0">{{ tasks|length }}</div>
+      <div class="small text-muted">Total</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 text-center py-3">
+      <div class="h4 fw-bold text-danger mb-0">2</div>
+      <div class="small text-muted">Pending</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 text-center py-3">
+      <div class="h4 fw-bold text-primary mb-0">1</div>
+      <div class="small text-muted">In Progress</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm rounded-4 text-center py-3">
+      <div class="h4 fw-bold text-success mb-0">1</div>
+      <div class="small text-muted">Completed</div>
+    </div>
+  </div>
+</div>
+
+<!-- Task List -->
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+    <h6 class="fw-bold mb-0">All Tasks</h6>
+    <div class="d-flex gap-2">
+      <button class="btn btn-sm btn-outline-secondary rounded-3 active" data-filter="all">All</button>
+      <button class="btn btn-sm btn-outline-warning rounded-3" data-filter="Pending">Pending</button>
+      <button class="btn btn-sm btn-outline-primary rounded-3" data-filter="In Progress">In Progress</button>
+      <button class="btn btn-sm btn-outline-success rounded-3" data-filter="Completed">Done</button>
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <div class="d-flex flex-column gap-3" id="taskList">
+      {% for task in tasks %}
+      <div class="task-item card border-0 bg-light rounded-3 p-3" data-status="{{ task.status }}">
+        <div class="d-flex align-items-start gap-3">
+          <div class="mt-1">
+            {% if task.status == 'Completed' %}
+            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+            {% elif task.status == 'In Progress' %}
+            <i class="bi bi-arrow-repeat text-primary fs-5"></i>
+            {% else %}
+            <i class="bi bi-circle text-warning fs-5"></i>
+            {% endif %}
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <h6 class="fw-semibold mb-1 {% if task.status == 'Completed' %}text-decoration-line-through text-muted{% endif %}">
+                {{ task.title }}
+              </h6>
+              <div class="d-flex gap-2 align-items-center">
+                <span class="badge rounded-pill
+                  {% if task.priority == 'High' %}bg-danger
+                  {% elif task.priority == 'Medium' %}bg-warning text-dark
+                  {% else %}bg-secondary{% endif %}">
+                  {{ task.priority }}
+                </span>
+                <span class="badge rounded-pill
+                  {% if task.status == 'Completed' %}bg-success
+                  {% elif task.status == 'In Progress' %}bg-primary
+                  {% else %}bg-warning text-dark{% endif %}">
+                  {{ task.status }}
+                </span>
+              </div>
+            </div>
+            <div class="text-muted small">
+              <i class="bi bi-calendar3 me-1"></i>Due: {{ task.due }}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-5">
+        <i class="bi bi-check2-all text-muted" style="font-size:3rem;"></i>
+        <p class="text-muted mt-3">No tasks assigned yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('[data-filter]').forEach(btn => {
+  btn.addEventListener('click', function () {
+    const filter = this.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelectorAll('.task-item').forEach(item => {
+      item.style.display = (filter === 'all' || item.dataset.status === filter) ? '' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

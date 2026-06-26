@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}My History — ProjectMS{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">My History</h4>
+    <p class="text-muted small mb-0">Your recent activity log</p>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-body p-4">
+    <div class="timeline">
+      {% for item in history %}
+      <div class="timeline-item d-flex gap-3 {% if not forloop.last %}pb-4{% endif %}">
+        <!-- Timeline dot -->
+        <div class="timeline-dot d-flex flex-column align-items-center">
+          <div class="dot bg-primary rounded-circle" style="width:12px;height:12px;flex-shrink:0;margin-top:4px;"></div>
+          {% if not forloop.last %}
+          <div class="timeline-line bg-light border" style="width:2px;flex-grow:1;margin-top:4px;"></div>
+          {% endif %}
+        </div>
+        <!-- Content -->
+        <div class="flex-grow-1 pb-2">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-1 mb-1">
+            <span class="fw-semibold small">{{ item.action }}</span>
+            <span class="text-muted x-small">{{ item.date }}</span>
+          </div>
+          <p class="text-muted small mb-0">{{ item.description }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-5">
+        <i class="bi bi-clock-history text-muted" style="font-size:3rem;"></i>
+        <p class="text-muted mt-3">No history yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ employee_user.get_full_name|default:employee_user.username }} — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Employee Details</h4>
+    <p class="text-muted small mb-0">Viewing profile of {{ employee_user.get_full_name|default:employee_user.username }}</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'employee_edit' employee_user.pk %}" class="btn btn-primary rounded-3">
+      <i class="bi bi-pencil me-2"></i>Edit
+    </a>
+    <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary rounded-3">
+      <i class="bi bi-arrow-left me-2"></i>Back to List
+    </a>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- Profile Card -->
+  <div class="col-12 col-lg-4">
+    <div class="card border-0 shadow-sm rounded-4 text-center">
+      <div class="card-body p-4">
+        <!-- Avatar -->
+        <div class="avatar-xl mx-auto mb-3 bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:100px;height:100px;">
+          <span class="text-primary fw-bold fs-1">
+            {{ employee_user.first_name|first|upper|default:employee_user.username|first|upper }}
+          </span>
+        </div>
+        <h5 class="fw-bold mb-1">{{ employee_user.get_full_name|default:employee_user.username }}</h5>
+        <p class="text-muted small mb-2">{{ employee_profile.position|default:"Employee" }}</p>
+
+        <!-- Role Badge -->
+        <span class="badge rounded-pill fw-semibold px-3 py-2
+          {% if employee_user.role == 'ADMIN' %}bg-warning text-dark
+          {% else %}bg-primary bg-opacity-10 text-primary{% endif %}">
+          <i class="bi {% if employee_user.role == 'ADMIN' %}bi-shield-fill{% else %}bi-person-fill{% endif %} me-1"></i>
+          {{ employee_user.role }}
+        </span>
+
+        {% if employee_profile %}
+        <!-- Status -->
+        <div class="mt-3">
+          <span class="badge rounded-pill px-3 py-2
+            {% if employee_profile.status == 'ACTIVE' %}bg-success
+            {% elif employee_profile.status == 'ON_LEAVE' %}bg-warning text-dark
+            {% else %}bg-secondary{% endif %}">
+            {{ employee_profile.status }}
+          </span>
+        </div>
+        {% endif %}
+
+        <hr class="my-3">
+
+        <div class="d-flex flex-column gap-2 text-start">
+          <div class="d-flex align-items-center gap-2 small">
+            <i class="bi bi-envelope text-muted"></i>
+            <span>{{ employee_user.email }}</span>
+          </div>
+          {% if employee_profile and employee_profile.phone %}
+          <div class="d-flex align-items-center gap-2 small">
+            <i class="bi bi-telephone text-muted"></i>
+            <span>{{ employee_profile.phone }}</span>
+          </div>
+          {% endif %}
+          {% if employee_user.department %}
+          <div class="d-flex align-items-center gap-2 small">
+            <i class="bi bi-building text-muted"></i>
+            <span>{{ employee_user.department }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="{% url 'employee_edit' employee_user.pk %}" class="btn btn-primary rounded-3">
+            <i class="bi bi-pencil me-2"></i>Edit Profile
+          </a>
+          <button class="btn btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="bi bi-trash me-2"></i>Delete
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="col-12 col-lg-8">
+
+    <!-- Account Info -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-person-fill me-2 text-primary"></i>Account Information</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Username</p>
+            <p class="mb-0">@{{ employee_user.username }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Email</p>
+            <p class="mb-0">{{ employee_user.email }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Date Joined</p>
+            <p class="mb-0">{{ employee_user.date_joined|date:"F d, Y" }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Last Login</p>
+            <p class="mb-0">{{ employee_user.last_login|date:"F d, Y H:i"|default:"Never" }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Department</p>
+            <p class="mb-0">{{ employee_user.department|default:"—" }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Active Status</p>
+            <p class="mb-0">
+              {% if employee_user.is_active %}
+              <span class="badge bg-success">Active</span>
+              {% else %}
+              <span class="badge bg-secondary">Inactive</span>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if employee_profile %}
+    <!-- Employment Details -->
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-briefcase-fill me-2 text-primary"></i>Employment Details</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Position</p>
+            <p class="mb-0">{{ employee_profile.position|default:"—" }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Employment Type</p>
+            <p class="mb-0">{{ employee_profile.get_employment_type_display }}</p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Status</p>
+            <p class="mb-0">
+              <span class="badge rounded-pill {% if employee_profile.status == 'ACTIVE' %}bg-success{% elif employee_profile.status == 'ON_LEAVE' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                {{ employee_profile.status }}
+              </span>
+            </p>
+          </div>
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Joining Date</p>
+            <p class="mb-0">{{ employee_profile.joining_date|date:"F d, Y"|default:"—" }}</p>
+          </div>
+          {% if employee_profile.phone %}
+          <div class="col-12 col-md-6">
+            <p class="text-muted small mb-1 fw-semibold">Phone</p>
+            <p class="mb-0">{{ employee_profile.phone }}</p>
+          </div>
+          {% endif %}
+          {% if employee_profile.address %}
+          <div class="col-12">
+            <p class="text-muted small mb-1 fw-semibold">Address</p>
+            <p class="mb-0">{{ employee_profile.address }}</p>
+          </div>
+          {% endif %}
+          {% if employee_profile.notes %}
+          <div class="col-12">
+            <p class="text-muted small mb-1 fw-semibold">Notes</p>
+            <p class="mb-0 text-muted">{{ employee_profile.notes }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-danger">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Employee
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">
+          Are you sure you want to delete <strong>{{ employee_user.get_full_name|default:employee_user.username }}</strong>?
+          This cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+        <form method="POST" action="{% url 'employee_delete' employee_user.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger rounded-3">
+            <i class="bi bi-trash me-1"></i>Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,523 @@
+You are a Senior Django Software Architect and Full Stack Developer.
+
+Your job is to CONTINUE and IMPROVE my existing Django project.
+
+You are NOT creating a new project.
+
+You are NOT redesigning the project from scratch.
+
+You are working on an EXISTING GitHub repository.
+
+==========================================================
+PROJECT OVERVIEW
+==========================================================
+
+Project Name:
+Project Management System
+
+Technology Stack:
+
+- Python
+- Django
+- Django REST Framework
+- Bootstrap 5
+- HTML
+- CSS
+- JavaScript
+- SQLite (Development)
+- JWT Authentication
+
+Current Status:
+
+Phase 1 completed.
+Phase 2 partially completed.
+
+The existing repository already contains:
+
+- Django project setup
+- Custom User Model
+- JWT Authentication setup
+- Users app
+- Employee app
+- Admin Panel app
+- Existing backend code
+
+DO NOT delete any existing backend code.
+
+Refactor only where necessary.
+
+Continue from the current project.
+
+==========================================================
+VERY IMPORTANT PROJECT UNDERSTANDING
+==========================================================
+
+The previous AI interpreted the project incorrectly.
+
+Do NOT repeat the same mistake.
+
+There is ONLY ONE authentication system.
+
+There is ONLY ONE User model.
+
+Admin is NOT a separate authentication system.
+
+Employee is NOT a separate authentication system.
+
+Both use the SAME login page.
+
+Difference is ONLY the role.
+
+Example:
+
+role = ADMIN
+
+role = EMPLOYEE
+
+After login
+
+ADMIN
+
+↓
+
+Admin Dashboard
+
+EMPLOYEE
+
+↓
+
+Employee Dashboard
+
+DO NOT create separate authentication logic.
+
+DO NOT create another User model.
+
+DO NOT create duplicate login pages.
+
+==========================================================
+CURRENT APPS
+==========================================================
+
+Keep these existing apps.
+
+users/
+
+employee/
+
+admin_panel/
+
+Do NOT create unnecessary new apps.
+
+Responsibilities
+
+users
+
+- Custom User Model
+- Authentication
+- Login
+- Logout
+- Profile
+- Role Handling
+
+employee
+
+- Employee Dashboard
+- Employee Profile
+- Audio Upload UI
+- Employee Tasks
+- Employee History
+
+admin_panel
+
+- Admin Dashboard
+- Employee Management
+- Reports UI
+- Settings UI
+
+==========================================================
+OBJECTIVE
+==========================================================
+
+Build a PROFESSIONAL Bootstrap-based frontend.
+
+Improve the project structure.
+
+Create a BASIC backend skeleton.
+
+Do NOT implement complete business logic.
+
+The backend should be only enough to connect templates, forms, URLs and placeholder CRUD.
+
+==========================================================
+FRONTEND REQUIREMENTS
+==========================================================
+
+Frontend is the primary objective.
+
+Around 80% of the work should focus on frontend.
+
+Backend only around 20%.
+
+Use Bootstrap 5 everywhere.
+
+Bootstrap must be the main framework.
+
+Do NOT use:
+
+Tailwind
+
+React
+
+Angular
+
+Vue
+
+Material UI
+
+Use Bootstrap components as much as possible.
+
+Keep custom CSS minimal.
+
+==========================================================
+BOOTSTRAP COMPONENTS
+==========================================================
+
+Navbar
+
+Sidebar
+
+Cards
+
+Forms
+
+Tables
+
+Buttons
+
+Badges
+
+Dropdowns
+
+Pagination
+
+Breadcrumbs
+
+Alerts
+
+Modals
+
+Accordion
+
+Collapse
+
+Tabs
+
+Offcanvas
+
+Bootstrap Icons
+
+Responsive Grid
+
+==========================================================
+THEME
+==========================================================
+
+Professional Corporate Theme
+
+Blue
+
+White
+
+Light Gray
+
+Rounded Cards
+
+Soft Shadows
+
+Clean UI
+
+Professional Admin Dashboard
+
+==========================================================
+CREATE THESE PAGES
+==========================================================
+
+Authentication
+
+Login
+
+Forgot Password UI
+
+Dashboard
+
+Admin Dashboard
+
+Employee Dashboard
+
+Employee CRUD
+
+Employee List
+
+Add Employee
+
+Edit Employee
+
+Delete Employee Confirmation Modal
+
+Employee Details
+
+Employee Profile
+
+Upload Audio UI
+
+Reports UI
+
+Settings UI
+
+404 Page
+
+Base Layout
+
+==========================================================
+TEMPLATE STRUCTURE
+==========================================================
+
+Use Django Template Inheritance.
+
+Create
+
+templates/
+
+base.html
+
+components/
+
+navbar.html
+
+sidebar.html
+
+footer.html
+
+messages.html
+
+breadcrumbs.html
+
+Create reusable templates.
+
+Avoid duplicated HTML.
+
+==========================================================
+STATIC STRUCTURE
+==========================================================
+
+static/
+
+css/
+
+js/
+
+images/
+
+Create
+
+main.css
+
+main.js
+
+Keep custom CSS small.
+
+Use Bootstrap utilities whenever possible.
+
+==========================================================
+BASIC BACKEND ONLY
+==========================================================
+
+Create only basic backend.
+
+Allowed
+
+Basic Views
+
+Basic URLs
+
+Basic Forms
+
+Basic Admin Registration
+
+Template Rendering
+
+Success Messages
+
+Error Messages
+
+Placeholder Dashboard Statistics
+
+Basic CRUD Skeleton
+
+Placeholder Dummy Data
+
+Django Generic Views where appropriate
+
+Simple ModelForms
+
+Simple redirects
+
+==========================================================
+DO NOT IMPLEMENT
+==========================================================
+
+JWT Logic
+
+Authentication Logic
+
+Business Logic
+
+Speech To Text
+
+AI
+
+LLM
+
+Gemini
+
+OpenAI
+
+Whisper
+
+Audio Processing
+
+Email Automation
+
+Complex Reports
+
+Analytics
+
+Complex Queries
+
+REST APIs
+
+Serializers
+
+Permissions
+
+Production Logic
+
+Advanced Validations
+
+These features will be implemented manually later.
+
+==========================================================
+PROJECT STRUCTURE IMPROVEMENT
+==========================================================
+
+Preserve existing backend.
+
+Organize templates professionally.
+
+Keep naming consistent.
+
+Improve readability.
+
+Do NOT duplicate code.
+
+Do NOT generate unnecessary files.
+
+Do NOT remove working code.
+
+==========================================================
+CODING STYLE
+==========================================================
+
+Professional
+
+PEP8
+
+Reusable
+
+Scalable
+
+Well Commented
+
+Readable
+
+Maintainable
+
+==========================================================
+QUALITY EXPECTATION
+==========================================================
+
+Every page should look production ready.
+
+Responsive on
+
+Desktop
+
+Laptop
+
+Tablet
+
+Mobile
+
+Forms should have validation UI.
+
+Tables should be responsive.
+
+Sidebar should collapse on mobile.
+
+Navbar should be professional.
+
+Use Bootstrap Icons.
+
+Create clean layouts.
+
+==========================================================
+IMPORTANT
+==========================================================
+
+This repository already contains backend code.
+
+Continue from it.
+
+Do NOT overwrite existing backend.
+
+Do NOT replace my project.
+
+Improve it.
+
+If any architecture issue exists, refactor carefully without breaking existing functionality.
+
+==========================================================
+FINAL GOAL
+==========================================================
+
+Deliver a professional Django Project Management System with
+
+✔ Bootstrap 5 frontend
+
+✔ Complete template structure
+
+✔ Responsive UI
+
+✔ Professional dashboards
+
+✔ Employee CRUD UI
+
+✔ Audio Upload UI
+
+✔ Reports UI
+
+✔ Base template
+
+✔ Sidebar
+
+✔ Navbar
+
+✔ Footer
+
+✔ Reusable Bootstrap components
+
+✔ Basic Django backend skeleton
+
+✔ Existing backend preserved
+
+The output should be ready for me to continue implementing the remaining backend, AI integration, Speech-to-Text, Reports, Authentication enhancements and business logic manually.

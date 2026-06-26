@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Settings — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Settings</h4>
+    <p class="text-muted small mb-0">System configuration and preferences</p>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- Left: Settings Nav -->
+  <div class="col-12 col-lg-3">
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-3">
+        <nav class="nav flex-column gap-1" id="settingsNav">
+          <a href="#general" class="nav-link text-dark fw-semibold active rounded-3 settings-nav-link" data-target="generalSection">
+            <i class="bi bi-sliders me-2 text-primary"></i>General
+          </a>
+          <a href="#notifications" class="nav-link text-dark fw-semibold rounded-3 settings-nav-link" data-target="notificationsSection">
+            <i class="bi bi-bell me-2 text-primary"></i>Notifications
+          </a>
+          <a href="#security" class="nav-link text-dark fw-semibold rounded-3 settings-nav-link" data-target="securitySection">
+            <i class="bi bi-shield-lock me-2 text-primary"></i>Security
+          </a>
+          <a href="#appearance" class="nav-link text-dark fw-semibold rounded-3 settings-nav-link" data-target="appearanceSection">
+            <i class="bi bi-palette me-2 text-primary"></i>Appearance
+          </a>
+          <a href="#system" class="nav-link text-dark fw-semibold rounded-3 settings-nav-link" data-target="systemSection">
+            <i class="bi bi-server me-2 text-primary"></i>System Info
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Settings Panels -->
+  <div class="col-12 col-lg-9">
+
+    <!-- General Settings -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 settings-section" id="generalSection">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-sliders me-2 text-primary"></i>General Settings</h6>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">System Name</label>
+              <input type="text" class="form-control" value="ProjectMS" placeholder="System name">
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Time Zone</label>
+              <select class="form-select">
+                <option selected>UTC</option>
+                <option>Asia/Colombo</option>
+                <option>America/New_York</option>
+                <option>Europe/London</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Date Format</label>
+              <select class="form-select">
+                <option selected>YYYY-MM-DD</option>
+                <option>DD/MM/YYYY</option>
+                <option>MM/DD/YYYY</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Language</label>
+              <select class="form-select">
+                <option selected>English</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary rounded-3">
+              <i class="bi bi-floppy me-2"></i>Save General Settings
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 settings-section" id="notificationsSection">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-bell me-2 text-primary"></i>Notifications</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-person-plus-fill text-muted"></i>
+              <div>
+                <div class="fw-semibold small">New employee added</div>
+                <div class="text-muted x-small">Receive email notification</div>
+              </div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-check2-square text-muted"></i>
+              <div>
+                <div class="fw-semibold small">Task assigned</div>
+                <div class="text-muted x-small">Receive email notification</div>
+              </div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-exclamation-triangle-fill text-muted"></i>
+              <div>
+                <div class="fw-semibold small">System alerts</div>
+                <div class="text-muted x-small">Receive email notification</div>
+              </div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox">
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-bar-chart-fill text-muted"></i>
+              <div>
+                <div class="fw-semibold small">Weekly reports</div>
+                <div class="text-muted x-small">Receive email notification</div>
+              </div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox">
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-primary rounded-3">
+            <i class="bi bi-floppy me-2"></i>Save Notification Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 settings-section" id="securitySection">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-shield-lock me-2 text-primary"></i>Security Settings</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold small">Session Timeout (minutes)</label>
+            <input type="number" class="form-control" value="60" min="5" max="480">
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold small">Max Login Attempts</label>
+            <input type="number" class="form-control" value="5" min="3" max="10">
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="twoFactor">
+              <label class="form-check-label fw-semibold small" for="twoFactor">
+                Two-Factor Authentication <span class="badge bg-warning text-dark ms-1">Coming Soon</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <button class="btn btn-primary rounded-3">
+            <i class="bi bi-floppy me-2"></i>Save Security Settings
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Info -->
+    <div class="card border-0 shadow-sm rounded-4 settings-section" id="systemSection">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-server me-2 text-primary"></i>System Information</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="table-responsive">
+          <table class="table table-borderless mb-0">
+            <tbody class="small">
+              <tr>
+                <td class="text-muted fw-semibold" style="width:200px;">Application</td>
+                <td>ProjectMS v1.0</td>
+              </tr>
+              <tr>
+                <td class="text-muted fw-semibold">Framework</td>
+                <td>Django 6.0.6</td>
+              </tr>
+              <tr>
+                <td class="text-muted fw-semibold">API Framework</td>
+                <td>Django REST Framework</td>
+              </tr>
+              <tr>
+                <td class="text-muted fw-semibold">Authentication</td>
+                <td>Session + JWT</td>
+              </tr>
+              <tr>
+                <td class="text-muted fw-semibold">Database</td>
+                <td>SQLite (Development)</td>
+              </tr>
+              <tr>
+                <td class="text-muted fw-semibold">Frontend</td>
+                <td>Bootstrap 5.3 + Bootstrap Icons</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info border-0 rounded-3 mt-3 small">
+          <i class="bi bi-info-circle me-2"></i>
+          System information is read-only. Changes to system configuration require server access.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('.settings-nav-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.settings-nav-link').forEach(l => l.classList.remove('active', 'bg-primary', 'bg-opacity-10'));
+    this.classList.add('active', 'bg-primary', 'bg-opacity-10');
+    const target = document.getElementById(this.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+{% endblock %}

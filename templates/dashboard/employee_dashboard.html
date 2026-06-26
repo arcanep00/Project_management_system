@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Dashboard — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">My Dashboard</h4>
+    <p class="text-muted mb-0 small">
+      Hello, {{ request.user.get_full_name|default:request.user.username }}!
+      {% if employee_profile and employee_profile.position %}
+        — {{ employee_profile.position }}
+      {% endif %}
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'upload_audio' %}" class="btn btn-primary rounded-3">
+      <i class="bi bi-mic me-2"></i>Upload Audio
+    </a>
+    <a href="{% url 'employee_tasks' %}" class="btn btn-outline-secondary rounded-3">
+      <i class="bi bi-check2-square me-2"></i>My Tasks
+    </a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-4 mb-4">
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Pending Tasks</p>
+            <h2 class="fw-bold text-dark mb-0">{{ tasks_pending }}</h2>
+            <span class="badge bg-warning bg-opacity-10 text-warning small mt-2">Needs Attention</span>
+          </div>
+          <div class="stat-icon bg-warning bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-hourglass-split text-warning fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Completed</p>
+            <h2 class="fw-bold text-dark mb-0">{{ tasks_completed }}</h2>
+            <span class="badge bg-success bg-opacity-10 text-success small mt-2">This Month</span>
+          </div>
+          <div class="stat-icon bg-success bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-check2-all text-success fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Audio Uploads</p>
+            <h2 class="fw-bold text-dark mb-0">{{ audio_uploads }}</h2>
+            <span class="badge bg-info bg-opacity-10 text-info small mt-2">Total Files</span>
+          </div>
+          <div class="stat-icon bg-info bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-file-music-fill text-info fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Department</p>
+            <h2 class="fw-bold text-dark mb-0 fs-5 mt-1">{{ request.user.department|default:"—" }}</h2>
+            <span class="badge bg-primary bg-opacity-10 text-primary small mt-2">My Team</span>
+          </div>
+          <div class="stat-icon bg-primary bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-building text-primary fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Main Content -->
+<div class="row g-4">
+
+  <!-- Announcements -->
+  <div class="col-12 col-lg-7">
+    <div class="card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+        <h6 class="fw-bold mb-0"><i class="bi bi-megaphone-fill text-primary me-2"></i>Announcements</h6>
+        <span class="badge bg-primary rounded-pill">{{ announcements|length }} New</span>
+      </div>
+      <div class="card-body px-4 pb-4">
+        {% for item in announcements %}
+        <div class="announcement-item border rounded-3 p-3 mt-3 bg-light">
+          <div class="d-flex justify-content-between align-items-start mb-1">
+            <h6 class="fw-semibold mb-0 small">{{ item.title }}</h6>
+            <span class="text-muted x-small">{{ item.date }}</span>
+          </div>
+          <p class="text-muted small mb-0">{{ item.body }}</p>
+        </div>
+        {% empty %}
+        <div class="text-center py-5">
+          <i class="bi bi-megaphone text-muted" style="font-size:2.5rem;"></i>
+          <p class="text-muted mt-2 small">No announcements at this time.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="col-12 col-lg-5">
+
+    <!-- Quick Actions -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0">Quick Actions</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <div class="d-grid gap-3 mt-3">
+          <a href="{% url 'upload_audio' %}" class="btn btn-primary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-mic-fill"></i> Upload Audio Recording
+          </a>
+          <a href="{% url 'employee_tasks' %}" class="btn btn-outline-primary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-check2-square"></i> View My Tasks
+          </a>
+          <a href="{% url 'profile' %}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-person-circle"></i> Update Profile
+          </a>
+          <a href="{% url 'employee_history' %}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-clock-history"></i> View My History
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Info Card -->
+    {% if employee_profile %}
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0">My Information</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <ul class="list-group list-group-flush mt-2">
+          <li class="list-group-item px-0 border-0 d-flex justify-content-between py-2">
+            <span class="small text-muted">Position</span>
+            <span class="small fw-semibold">{{ employee_profile.position|default:"—" }}</span>
+          </li>
+          <li class="list-group-item px-0 border-0 d-flex justify-content-between py-2">
+            <span class="small text-muted">Status</span>
+            <span class="badge rounded-pill
+              {% if employee_profile.status == 'ACTIVE' %}bg-success
+              {% elif employee_profile.status == 'ON_LEAVE' %}bg-warning text-dark
+              {% else %}bg-secondary{% endif %}">
+              {{ employee_profile.status }}
+            </span>
+          </li>
+          <li class="list-group-item px-0 border-0 d-flex justify-content-between py-2">
+            <span class="small text-muted">Employment</span>
+            <span class="small fw-semibold">{{ employee_profile.get_employment_type_display }}</span>
+          </li>
+          <li class="list-group-item px-0 border-0 d-flex justify-content-between py-2">
+            <span class="small text-muted">Joining Date</span>
+            <span class="small fw-semibold">{{ employee_profile.joining_date|date:"M d, Y"|default:"—" }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Employee List — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Employee Management</h4>
+    <p class="text-muted small mb-0">{{ total_count }} employee{{ total_count|pluralize }} found</p>
+  </div>
+  <a href="{% url 'employee_add' %}" class="btn btn-primary rounded-3">
+    <i class="bi bi-person-plus-fill me-2"></i>Add Employee
+  </a>
+</div>
+
+<!-- Search & Filter -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+  <div class="card-body p-4">
+    <form method="GET" action="{% url 'employee_list' %}" class="row g-3 align-items-end">
+      <div class="col-12 col-md-5">
+        <label class="form-label small fw-semibold text-muted">Search</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" name="q" class="form-control" placeholder="Name, email, username…" value="{{ query }}">
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label small fw-semibold text-muted">Department</label>
+        <select name="department" class="form-select">
+          <option value="">All Departments</option>
+          {% for dept in departments %}
+          <option value="{{ dept }}" {% if dept_filter == dept %}selected{% endif %}>{{ dept }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary rounded-3 flex-grow-1">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+          {% if query or dept_filter %}
+          <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary rounded-3">
+            <i class="bi bi-x-lg"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Employee Table -->
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-body p-0">
+    {% if employees %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr class="text-muted small text-uppercase">
+            <th class="px-4 py-3 fw-semibold border-0">Employee</th>
+            <th class="py-3 fw-semibold border-0">Department</th>
+            <th class="py-3 fw-semibold border-0">Role</th>
+            <th class="py-3 fw-semibold border-0">Joined</th>
+            <th class="py-3 fw-semibold border-0 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for emp in employees %}
+          <tr>
+            <td class="px-4 py-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="avatar-md bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:44px;height:44px;flex-shrink:0;">
+                  <span class="text-primary fw-bold">
+                    {{ emp.first_name|first|upper|default:emp.username|first|upper }}
+                  </span>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ emp.get_full_name|default:emp.username }}</div>
+                  <div class="text-muted small">{{ emp.email }}</div>
+                  <div class="text-muted x-small">@{{ emp.username }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              {% if emp.department %}
+              <span class="badge bg-light text-dark border rounded-pill px-3">{{ emp.department }}</span>
+              {% else %}
+              <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge rounded-pill fw-semibold
+                {% if emp.role == 'ADMIN' %}bg-warning text-dark
+                {% else %}bg-primary bg-opacity-10 text-primary{% endif %}">
+                <i class="bi {% if emp.role == 'ADMIN' %}bi-shield-fill{% else %}bi-person-fill{% endif %} me-1"></i>
+                {{ emp.role }}
+              </span>
+            </td>
+            <td>
+              <span class="text-muted small">{{ emp.date_joined|date:"M d, Y" }}</span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-1">
+                <a href="{% url 'employee_detail' emp.pk %}" class="btn btn-sm btn-outline-primary rounded-3" title="View">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a href="{% url 'employee_edit' emp.pk %}" class="btn btn-sm btn-outline-secondary rounded-3" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-3" title="Delete"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal{{ emp.pk }}">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Delete Confirmation Modal (inline) -->
+          <div class="modal fade" id="deleteModal{{ emp.pk }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                  <h5 class="modal-title fw-bold text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Employee
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                  <p class="text-muted">
+                    Are you sure you want to delete
+                    <strong>{{ emp.get_full_name|default:emp.username }}</strong>?
+                    This action cannot be undone.
+                  </p>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+                  <form method="POST" action="{% url 'employee_delete' emp.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger rounded-3">
+                      <i class="bi bi-trash me-1"></i>Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="bi bi-people text-muted" style="font-size:4rem;"></i>
+      <h5 class="text-muted mt-3">No employees found</h5>
+      <p class="text-muted small">
+        {% if query or dept_filter %}
+          Try adjusting your search or filter criteria.
+        {% else %}
+          Get started by adding your first employee.
+        {% endif %}
+      </p>
+      {% if not query and not dept_filter %}
+      <a href="{% url 'employee_add' %}" class="btn btn-primary rounded-3 mt-2">
+        <i class="bi bi-person-plus me-2"></i>Add First Employee
+      </a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

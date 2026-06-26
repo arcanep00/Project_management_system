@@ -1,0 +1,124 @@
+{% load static %}
+{% url 'admin_dashboard' as admin_dash_url %}
+{% url 'employee_dashboard' as emp_dash_url %}
+
+<nav id="sidebar" class="sidebar d-flex flex-column flex-shrink-0 text-white">
+  <!-- Brand -->
+  <a href="{% url 'dashboard' %}" class="sidebar-brand d-flex align-items-center gap-2 text-white text-decoration-none px-3 py-4">
+    <i class="bi bi-kanban-fill fs-4 text-warning"></i>
+    <span class="fw-bold fs-5">ProjectMS</span>
+  </a>
+
+  <hr class="sidebar-divider mx-3 my-0" />
+
+  <!-- Navigation -->
+  <ul class="nav nav-pills flex-column mb-auto px-2 pt-3">
+
+    {% if user.role == 'ADMIN' %}
+    <!-- ADMIN Navigation -->
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-2">Main</li>
+
+    <li class="nav-item">
+      <a href="{% url 'admin_dashboard' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+    </li>
+
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-3">Management</li>
+
+    <li class="nav-item">
+      <a href="{% url 'employee_list' %}"
+         class="nav-link text-white {% if 'employee' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-people-fill me-2"></i> Employees
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'employee_add' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'employee_add' %}active{% endif %}">
+        <i class="bi bi-person-plus-fill me-2"></i> Add Employee
+      </a>
+    </li>
+
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-3">Analytics</li>
+
+    <li class="nav-item">
+      <a href="{% url 'reports' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+        <i class="bi bi-bar-chart-fill me-2"></i> Reports
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'settings' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+        <i class="bi bi-gear-fill me-2"></i> Settings
+      </a>
+    </li>
+
+    {% else %}
+    <!-- EMPLOYEE Navigation -->
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-2">Main</li>
+
+    <li class="nav-item">
+      <a href="{% url 'employee_dashboard' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'employee_dashboard' %}active{% endif %}">
+        <i class="bi bi-house-fill me-2"></i> Dashboard
+      </a>
+    </li>
+
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-3">My Work</li>
+
+    <li class="nav-item">
+      <a href="{% url 'employee_tasks' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'employee_tasks' %}active{% endif %}">
+        <i class="bi bi-check2-square me-2"></i> My Tasks
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'upload_audio' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'upload_audio' %}active{% endif %}">
+        <i class="bi bi-mic-fill me-2"></i> Upload Audio
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="{% url 'employee_history' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'employee_history' %}active{% endif %}">
+        <i class="bi bi-clock-history me-2"></i> History
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Shared -->
+    <li class="nav-item sidebar-section-label small text-uppercase text-muted px-2 py-1 mt-3">Account</li>
+
+    <li class="nav-item">
+      <a href="{% url 'profile' %}"
+         class="nav-link text-white {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <i class="bi bi-person-circle me-2"></i> My Profile
+      </a>
+    </li>
+
+  </ul>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer px-3 py-3 mt-auto">
+    <hr class="sidebar-divider mb-3" />
+    <div class="d-flex align-items-center gap-2">
+      <div class="avatar-sm">
+        <i class="bi bi-person-circle fs-4"></i>
+      </div>
+      <div class="overflow-hidden">
+        <div class="fw-semibold small text-truncate">{{ user.get_full_name|default:user.username }}</div>
+        <div class="text-muted x-small">
+          <span class="badge badge-role {% if user.role == 'ADMIN' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} small">
+            {{ user.role }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

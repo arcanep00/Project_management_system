@@ -1,0 +1,254 @@
+/* =====================================================
+   ProjectMS — Main Stylesheet
+   Custom styles to complement Bootstrap 5
+   Keep minimal — use Bootstrap utilities first
+   ===================================================== */
+
+/* ---- CSS Variables ---- */
+:root {
+  --sidebar-width: 260px;
+  --sidebar-bg: #1e2a3a;
+  --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --sidebar-active: rgba(255, 255, 255, 0.15);
+  --top-navbar-height: 64px;
+  --brand-blue: #0d6efd;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+/* ---- Base ---- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #f0f2f5;
+  color: #212529;
+}
+
+/* ---- Sidebar ---- */
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  flex-shrink: 0;
+  transition: width 0.3s ease, transform 0.3s ease;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+}
+
+.sidebar .nav-link {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.sidebar .nav-link:hover {
+  background: var(--sidebar-hover);
+}
+
+.sidebar .nav-link.active {
+  background: var(--sidebar-active);
+  font-weight: 600;
+}
+
+.sidebar-brand {
+  min-height: var(--top-navbar-height);
+}
+
+.sidebar-divider {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+/* ---- Top Navbar ---- */
+.top-navbar {
+  background: #ffffff;
+  min-height: var(--top-navbar-height);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* ---- Page Content Wrapper ---- */
+#page-content-wrapper {
+  min-width: 0;
+}
+
+/* ---- Stat Cards ---- */
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* ---- Cards ---- */
+.card {
+  border-radius: 1rem !important;
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+/* ---- Auth Pages ---- */
+.auth-page {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 50%, #f0f2f5 100%);
+}
+
+.auth-page .card {
+  border-radius: 1.25rem !important;
+}
+
+/* ---- Tables ---- */
+.table > :not(caption) > * > * {
+  padding: 0.85rem 1rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.04);
+}
+
+/* ---- Badges ---- */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--brand-blue);
+  border-color: var(--brand-blue);
+}
+
+/* ---- Forms ---- */
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  border-color: #dee2e6;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* ---- Upload Drop Zone ---- */
+.upload-dropzone {
+  border-style: dashed !important;
+  border-width: 2px !important;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.upload-dropzone:hover {
+  background: rgba(13, 110, 253, 0.04);
+}
+
+/* ---- Timeline ---- */
+.timeline-dot .dot {
+  border: 2px solid #0d6efd;
+}
+
+/* ---- Utility ---- */
+.x-small {
+  font-size: 0.72rem;
+}
+
+/* ---- Footer ---- */
+.footer {
+  font-size: 0.82rem;
+}
+
+/* ---- Responsive: Sidebar Collapse ---- */
+@media (max-width: 991.98px) {
+  #wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    position: relative;
+    display: none !important;
+  }
+
+  .sidebar.show {
+    display: flex !important;
+  }
+
+  #page-content-wrapper {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .stat-card .card-body {
+    padding: 1rem !important;
+  }
+
+  main.p-4 {
+    padding: 1rem !important;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .sidebar, .top-navbar, .footer, .btn, .alert {
+    display: none !important;
+  }
+  #page-content-wrapper {
+    width: 100%;
+  }
+}
+
+/* ---- Scrollbar Styling ---- */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+
+/* ---- Progress bars ---- */
+.progress {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* ---- Nav tabs ---- */
+.nav-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding-bottom: 0.75rem;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--brand-blue);
+  border-bottom-color: var(--brand-blue);
+  background: transparent;
+}

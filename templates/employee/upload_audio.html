@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload Audio — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Upload Audio</h4>
+    <p class="text-muted small mb-0">Upload your audio recordings for transcription</p>
+  </div>
+  <a href="{% url 'employee_history' %}" class="btn btn-outline-secondary rounded-3">
+    <i class="bi bi-clock-history me-2"></i>View History
+  </a>
+</div>
+
+<div class="row g-4">
+
+  <!-- Upload Form -->
+  <div class="col-12 col-lg-7">
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-mic-fill me-2 text-primary"></i>Upload Recording</h6>
+      </div>
+      <div class="card-body p-4">
+
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+          {% csrf_token %}
+
+          <!-- Drop Zone -->
+          <div class="upload-dropzone border-2 border-dashed border-primary rounded-4 text-center p-5 mb-4" id="dropZone">
+            <i class="bi bi-cloud-upload text-primary" style="font-size:3.5rem;"></i>
+            <h5 class="fw-semibold mt-3 mb-1">Drag & Drop your audio file</h5>
+            <p class="text-muted small mb-3">or click to browse from your computer</p>
+            <input type="file" id="audio_file" name="audio_file" accept=".mp3,.wav,.ogg,.m4a,.aac,.flac" class="d-none">
+            <button type="button" class="btn btn-outline-primary rounded-3 px-4" onclick="document.getElementById('audio_file').click()">
+              <i class="bi bi-folder2-open me-2"></i>Browse Files
+            </button>
+          </div>
+
+          <!-- File Preview -->
+          <div id="filePreview" class="d-none mb-4">
+            <div class="card bg-light border-0 rounded-3">
+              <div class="card-body p-3 d-flex align-items-center gap-3">
+                <i class="bi bi-file-music-fill text-primary fs-2"></i>
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="fw-semibold small text-truncate" id="fileName">—</div>
+                  <div class="text-muted x-small" id="fileSize">—</div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-3" id="removeFile">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Fields -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Recording Title <span class="text-muted fw-normal">(optional)</span></label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Team Meeting - June 26">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small">Notes <span class="text-muted fw-normal">(optional)</span></label>
+            <textarea name="notes" class="form-control" rows="2" placeholder="Any notes about this recording…"></textarea>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-semibold" id="uploadBtn">
+              <i class="bi bi-cloud-upload me-2"></i>Upload Recording
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info & Guidelines -->
+  <div class="col-12 col-lg-5">
+
+    <!-- Supported Formats -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-info-circle-fill me-2 text-info"></i>Supported Formats</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <div class="row g-2 mt-2">
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">MP3</div></div>
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">WAV</div></div>
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">OGG</div></div>
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">M4A</div></div>
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">AAC</div></div>
+          <div class="col-4"><div class="badge bg-light text-dark border w-100 py-2 rounded-3 fw-semibold">FLAC</div></div>
+        </div>
+        <hr class="my-3">
+        <ul class="list-unstyled mb-0 small text-muted">
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Max file size: 50 MB</li>
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Clear audio improves accuracy</li>
+          <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Mono or stereo accepted</li>
+          <li><i class="bi bi-info-circle text-info me-2"></i>Processing may take a few minutes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Recent Uploads Placeholder -->
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-muted"></i>Recent Uploads</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <div class="text-center py-4">
+          <i class="bi bi-file-music text-muted" style="font-size:2.5rem;"></i>
+          <p class="text-muted small mt-2 mb-0">No uploads yet</p>
+          <p class="text-muted x-small">Your uploaded recordings will appear here</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('audio_file');
+const filePreview = document.getElementById('filePreview');
+const fileName = document.getElementById('fileName');
+const fileSize = document.getElementById('fileSize');
+const removeFile = document.getElementById('removeFile');
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function showFile(file) {
+  fileName.textContent = file.name;
+  fileSize.textContent = formatBytes(file.size);
+  filePreview.classList.remove('d-none');
+  dropZone.classList.add('border-success');
+  dropZone.classList.remove('border-primary');
+}
+
+fileInput.addEventListener('change', function () {
+  if (this.files[0]) showFile(this.files[0]);
+});
+
+removeFile.addEventListener('click', function () {
+  fileInput.value = '';
+  filePreview.classList.add('d-none');
+  dropZone.classList.remove('border-success');
+  dropZone.classList.add('border-primary');
+});
+
+['dragenter', 'dragover'].forEach(e => {
+  dropZone.addEventListener(e, function (ev) {
+    ev.preventDefault();
+    dropZone.classList.add('bg-primary', 'bg-opacity-10');
+  });
+});
+
+['dragleave', 'drop'].forEach(e => {
+  dropZone.addEventListener(e, function () {
+    dropZone.classList.remove('bg-primary', 'bg-opacity-10');
+  });
+});
+
+dropZone.addEventListener('drop', function (ev) {
+  ev.preventDefault();
+  const file = ev.dataTransfer.files[0];
+  if (file) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+    showFile(file);
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">My Profile</h4>
+    <p class="text-muted small mb-0">View and manage your account information</p>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  <!-- Profile Card -->
+  <div class="col-12 col-lg-4">
+    <div class="card border-0 shadow-sm rounded-4 text-center">
+      <div class="card-body p-4">
+        <!-- Avatar -->
+        <div class="avatar-xl mx-auto mb-3 bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:100px;height:100px;">
+          <span class="text-primary fw-bold" style="font-size:2.5rem;">
+            {{ request.user.first_name|first|upper|default:request.user.username|first|upper }}
+          </span>
+        </div>
+
+        <h5 class="fw-bold mb-1">{{ request.user.get_full_name|default:request.user.username }}</h5>
+        <p class="text-muted small mb-2">
+          {% if employee_profile %}{{ employee_profile.position|default:"Employee" }}{% else %}Employee{% endif %}
+        </p>
+
+        <!-- Role Badge -->
+        <span class="badge rounded-pill px-3 py-2
+          {% if request.user.role == 'ADMIN' %}bg-warning text-dark
+          {% else %}bg-primary bg-opacity-10 text-primary{% endif %}">
+          <i class="bi {% if request.user.role == 'ADMIN' %}bi-shield-fill{% else %}bi-person-fill{% endif %} me-1"></i>
+          {{ request.user.role }}
+        </span>
+
+        {% if employee_profile %}
+        <div class="mt-2">
+          <span class="badge rounded-pill
+            {% if employee_profile.status == 'ACTIVE' %}bg-success
+            {% elif employee_profile.status == 'ON_LEAVE' %}bg-warning text-dark
+            {% else %}bg-secondary{% endif %}">
+            {{ employee_profile.status }}
+          </span>
+        </div>
+        {% endif %}
+
+        <hr class="my-4">
+
+        <div class="text-start d-flex flex-column gap-3">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person text-muted"></i>
+            <div>
+              <div class="x-small text-muted">Username</div>
+              <div class="small fw-semibold">@{{ request.user.username }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-envelope text-muted"></i>
+            <div>
+              <div class="x-small text-muted">Email</div>
+              <div class="small fw-semibold">{{ request.user.email }}</div>
+            </div>
+          </div>
+          {% if request.user.department %}
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-building text-muted"></i>
+            <div>
+              <div class="x-small text-muted">Department</div>
+              <div class="small fw-semibold">{{ request.user.department }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if employee_profile and employee_profile.phone %}
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-telephone text-muted"></i>
+            <div>
+              <div class="x-small text-muted">Phone</div>
+              <div class="small fw-semibold">{{ employee_profile.phone }}</div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-calendar3 text-muted"></i>
+            <div>
+              <div class="x-small text-muted">Member Since</div>
+              <div class="small fw-semibold">{{ request.user.date_joined|date:"F Y" }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="col-12 col-lg-8">
+
+    <!-- Tabs -->
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-header bg-white border-0 px-4 pt-4 pb-0">
+        <ul class="nav nav-tabs border-0" id="profileTabs">
+          <li class="nav-item">
+            <button class="nav-link active fw-semibold" data-bs-toggle="tab" data-bs-target="#accountTab">
+              <i class="bi bi-person me-2"></i>Account
+            </button>
+          </li>
+          {% if employee_profile %}
+          <li class="nav-item">
+            <button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#employmentTab">
+              <i class="bi bi-briefcase me-2"></i>Employment
+            </button>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#securityTab">
+              <i class="bi bi-shield me-2"></i>Security
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body p-4">
+        <div class="tab-content" id="profileTabContent">
+
+          <!-- Account Tab -->
+          <div class="tab-pane fade show active" id="accountTab">
+            <h6 class="fw-bold mb-3">Personal Information</h6>
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted fw-normal small">Full Name</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ request.user.get_full_name|default:"Not set" }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Username</dt>
+              <dd class="col-sm-8 small fw-semibold">@{{ request.user.username }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Email Address</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ request.user.email }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Department</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ request.user.department|default:"—" }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">System Role</dt>
+              <dd class="col-sm-8">
+                <span class="badge rounded-pill
+                  {% if request.user.role == 'ADMIN' %}bg-warning text-dark
+                  {% else %}bg-primary bg-opacity-10 text-primary{% endif %}">
+                  {{ request.user.role }}
+                </span>
+              </dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Account Created</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ request.user.date_joined|date:"F d, Y" }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Last Login</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ request.user.last_login|date:"F d, Y H:i"|default:"—" }}</dd>
+            </dl>
+            <div class="alert alert-info border-0 rounded-3 mt-3 small">
+              <i class="bi bi-info-circle me-2"></i>
+              To update your profile information, contact your administrator.
+            </div>
+          </div>
+
+          <!-- Employment Tab -->
+          {% if employee_profile %}
+          <div class="tab-pane fade" id="employmentTab">
+            <h6 class="fw-bold mb-3">Employment Details</h6>
+            <dl class="row mb-0">
+              <dt class="col-sm-4 text-muted fw-normal small">Position</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ employee_profile.position|default:"—" }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Employment Type</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ employee_profile.get_employment_type_display }}</dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Status</dt>
+              <dd class="col-sm-8">
+                <span class="badge rounded-pill
+                  {% if employee_profile.status == 'ACTIVE' %}bg-success
+                  {% elif employee_profile.status == 'ON_LEAVE' %}bg-warning text-dark
+                  {% else %}bg-secondary{% endif %}">
+                  {{ employee_profile.status }}
+                </span>
+              </dd>
+
+              <dt class="col-sm-4 text-muted fw-normal small">Joining Date</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ employee_profile.joining_date|date:"F d, Y"|default:"—" }}</dd>
+
+              {% if employee_profile.phone %}
+              <dt class="col-sm-4 text-muted fw-normal small">Phone</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ employee_profile.phone }}</dd>
+              {% endif %}
+
+              {% if employee_profile.address %}
+              <dt class="col-sm-4 text-muted fw-normal small">Address</dt>
+              <dd class="col-sm-8 small fw-semibold">{{ employee_profile.address }}</dd>
+              {% endif %}
+            </dl>
+          </div>
+          {% endif %}
+
+          <!-- Security Tab -->
+          <div class="tab-pane fade" id="securityTab">
+            <h6 class="fw-bold mb-3">Security Settings</h6>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item px-0 border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold small">Password</div>
+                    <div class="text-muted x-small">Last changed: Unknown</div>
+                  </div>
+                  <a href="{% url 'forgot_password' %}" class="btn btn-sm btn-outline-primary rounded-3">
+                    Change
+                  </a>
+                </div>
+              </div>
+              <div class="list-group-item px-0 border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold small">Two-Factor Authentication</div>
+                    <div class="text-muted x-small">Extra security for your account</div>
+                  </div>
+                  <span class="badge bg-warning text-dark rounded-pill">Coming Soon</span>
+                </div>
+              </div>
+              <div class="list-group-item px-0 border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold small">Session Management</div>
+                    <div class="text-muted x-small">Manage active sessions</div>
+                  </div>
+                  <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-3">
+                    Logout All
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

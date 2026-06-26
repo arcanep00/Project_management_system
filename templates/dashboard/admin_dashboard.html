@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard — ProjectMS{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Admin Dashboard</h4>
+    <p class="text-muted mb-0 small">Welcome back, {{ request.user.get_full_name|default:request.user.username }}!</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'employee_add' %}" class="btn btn-primary rounded-3">
+      <i class="bi bi-person-plus me-2"></i>Add Employee
+    </a>
+    <a href="{% url 'reports' %}" class="btn btn-outline-secondary rounded-3">
+      <i class="bi bi-bar-chart me-2"></i>Reports
+    </a>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Total Employees</p>
+            <h2 class="fw-bold text-dark mb-0">{{ total_employees }}</h2>
+            <span class="badge bg-primary bg-opacity-10 text-primary small mt-2">All Time</span>
+          </div>
+          <div class="stat-icon bg-primary bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-people-fill text-primary fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Active</p>
+            <h2 class="fw-bold text-dark mb-0">{{ active_employees }}</h2>
+            <span class="badge bg-success bg-opacity-10 text-success small mt-2">Currently Active</span>
+          </div>
+          <div class="stat-icon bg-success bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-person-check-fill text-success fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">On Leave</p>
+            <h2 class="fw-bold text-dark mb-0">{{ on_leave }}</h2>
+            <span class="badge bg-warning bg-opacity-10 text-warning small mt-2">Currently Away</span>
+          </div>
+          <div class="stat-icon bg-warning bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-calendar-x-fill text-warning fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card stat-card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted small fw-semibold mb-1 text-uppercase">Departments</p>
+            <h2 class="fw-bold text-dark mb-0">{{ total_departments }}</h2>
+            <span class="badge bg-info bg-opacity-10 text-info small mt-2">Across Company</span>
+          </div>
+          <div class="stat-icon bg-info bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-building-fill text-info fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Recent Activity + Quick Actions -->
+<div class="row g-4">
+
+  <!-- Recent Employees -->
+  <div class="col-12 col-lg-8">
+    <div class="card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+        <h6 class="fw-bold mb-0">Recent Employees</h6>
+        <a href="{% url 'employee_list' %}" class="btn btn-sm btn-outline-primary rounded-3">View All</a>
+      </div>
+      <div class="card-body px-4 pb-4">
+        {% if recent_employees %}
+        <div class="table-responsive mt-3">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr class="text-muted small text-uppercase">
+                <th class="fw-semibold border-0">Employee</th>
+                <th class="fw-semibold border-0">Department</th>
+                <th class="fw-semibold border-0">Role</th>
+                <th class="fw-semibold border-0">Joined</th>
+                <th class="fw-semibold border-0">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for emp in recent_employees %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;">
+                      <span class="text-primary fw-bold small">{{ emp.first_name|first|upper }}{{ emp.last_name|first|upper }}</span>
+                    </div>
+                    <div>
+                      <div class="fw-semibold small">{{ emp.get_full_name|default:emp.username }}</div>
+                      <div class="text-muted x-small">{{ emp.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="text-muted small">{{ emp.department|default:"—" }}</span></td>
+                <td>
+                  <span class="badge rounded-pill {% if emp.role == 'ADMIN' %}bg-warning text-dark{% else %}bg-primary bg-opacity-10 text-primary{% endif %}">
+                    {{ emp.role }}
+                  </span>
+                </td>
+                <td><span class="text-muted small">{{ emp.date_joined|date:"M d, Y" }}</span></td>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{% url 'employee_detail' emp.pk %}" class="btn btn-sm btn-outline-primary rounded-3 py-0 px-2">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{% url 'employee_edit' emp.pk %}" class="btn btn-sm btn-outline-secondary rounded-3 py-0 px-2">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+          <i class="bi bi-people text-muted" style="font-size:3rem;"></i>
+          <p class="text-muted mt-3">No employees yet. <a href="{% url 'employee_add' %}">Add one now.</a></p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="col-12 col-lg-4">
+    <div class="card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0">Quick Actions</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <div class="d-grid gap-3 mt-3">
+          <a href="{% url 'employee_add' %}" class="btn btn-primary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-person-plus-fill"></i> Add New Employee
+          </a>
+          <a href="{% url 'employee_list' %}" class="btn btn-outline-primary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-people-fill"></i> View All Employees
+          </a>
+          <a href="{% url 'reports' %}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-bar-chart-fill"></i> View Reports
+          </a>
+          <a href="{% url 'settings' %}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center gap-2">
+            <i class="bi bi-gear-fill"></i> System Settings
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="card border-0 shadow-sm rounded-4 mt-4">
+      <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+        <h6 class="fw-bold mb-0">System Status</h6>
+      </div>
+      <div class="card-body px-4 pb-4">
+        <ul class="list-group list-group-flush mt-2">
+          <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 py-2">
+            <span class="small text-muted">Database</span>
+            <span class="badge bg-success rounded-pill">Online</span>
+          </li>
+          <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 py-2">
+            <span class="small text-muted">Auth System</span>
+            <span class="badge bg-success rounded-pill">Active</span>
+          </li>
+          <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 py-2">
+            <span class="small text-muted">Audio Service</span>
+            <span class="badge bg-warning text-dark rounded-pill">Coming Soon</span>
+          </li>
+          <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 py-2">
+            <span class="small text-muted">Reports</span>
+            <span class="badge bg-primary rounded-pill">Beta</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
